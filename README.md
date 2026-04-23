@@ -19,27 +19,55 @@ The page is optimised for mobile, loads instantly, and requires no authenticatio
 
 ---
 
-## Planned: Dynamic content based on tag ID
+## Tag identity: GS1 GIAI
 
-The next evolution of this page is to make it **fully dynamic** — each tag carries a unique ID (embedded in the QR/NFC URL as a query parameter, e.g. `?id=A-042`), and the page will use that ID to fetch and display asset-specific information at scan time.
+Each physical tag is identified by a **GIAI (Global Individual Asset Identifier)** — a GS1 standard for uniquely identifying individual assets across organisations and systems. The GIAI is encoded directly into the QR code or NFC record on the tag.
 
-This enables a single hosted page to serve as the scan destination for **any asset type** across **any customer**, without requiring a separate website per use case.
-
-### How it will work
-
-The tag URL will follow the pattern:
+Example GIAI for an Invig-managed asset:
 
 ```
-https://westersnik.github.io/Keyfinder/?id=<TAG_ID>
+GIAI  70735391257
 ```
 
-On page load, the frontend reads the `id` parameter and queries the Invig Bifrost API (or a lightweight edge function) to retrieve the asset record. The page then renders the appropriate content for that specific asset and customer context.
+The GS1 Application Identifier (AI) for GIAI is `8004`, which means the full GS1 element string is:
+
+```
+(8004) 70735391257
+```
+
+### Redirect flow
+
+Invig operates a **GS1 Digital Link** resolver at `id.invig.no`. When a tag is scanned, the encoded URL follows the GS1 Digital Link URI syntax:
+
+```
+https://id.invig.no/8004/<GIAI>
+```
+
+**Example:**
+
+```
+https://id.invig.no/8004/70735391257
+```
+
+The resolver at `id.invig.no` redirects to this landing page, passing the GIAI as a query parameter so the page can look up and display asset-specific information:
+
+```
+https://westersnik.github.io/Keyfinder/?giai=70735391257
+```
+
+This architecture follows the [GS1 Digital Link standard](https://ref.gs1.org/standards/digital-link/uri-syntax/), which allows the same physical tag to resolve to different endpoints depending on context (consumer-facing, B2B, internal systems) via content negotiation at the resolver level.
+
+---
+
+## Planned: Dynamic content based on GIAI
+
+The next evolution of this page is to make it **fully dynamic** — on page load, the frontend reads the `giai` query parameter and queries the Invig Bifrost API to retrieve the asset record. The page then renders asset-specific content without requiring a separate website per customer or object type.
 
 ### Dynamic fields per asset
 
 | Field | Description |
 |---|---|
-| `asset_type` | Determines which icon, label and copy to display (key, tool, vehicle, equipment, etc.) |
+| `asset_type` | Determines icon, label and copy (key, tool, vehicle, equipment, device, etc.) |
 | `asset_name` | Human-readable name, e.g. "BMW 5-series – reg. AB12345" |
 | `customer_name` | The organisation that owns the asset |
 | `customer_logo` | Optional logo URL for white-label presentation |
@@ -52,14 +80,14 @@ On page load, the frontend reads the `id` parameter and queries the Invig Bifros
 
 ## Multi-customer, multi-object support
 
-Because all content is driven by the tag ID rather than hardcoded into the page, the same deployment can serve entirely different experiences depending on who scanned what:
+Because all content is driven by the GIAI rather than hardcoded into the page, the same deployment serves entirely different experiences depending on who scanned what:
 
 - A **car dealership** scanning a vehicle key sees the vehicle registration, current handler, and a link to their DMS record in Automaster or Keyloop.
 - A **construction company** scanning a power tool sees the tool name, last service date, and a link to their ERP entry in SAP.
 - A **hospital** scanning a medical device sees the device ID, maintenance status, and a contact link to their biomedical engineering team.
 - A **logistics operator** scanning a pallet tag sees the shipment ID, destination, and estimated handover time.
 
-The page adapts its headline, icon, colour accent, and call-to-action links to match the asset type and customer branding — all from a single codebase.
+The page adapts its headline, icon, colour accent, and call-to-action links to match the asset type and customer branding — all from a single codebase and a single hosted URL.
 
 ---
 
@@ -71,6 +99,8 @@ The page adapts its headline, icon, colour accent, and call-to-action links to m
 | Styling | Tailwind CSS v4 |
 | Bundler | Vite |
 | Hosting | GitHub Pages (`gh-pages` branch) |
+| Tag identity | GS1 GIAI (AI `8004`) |
+| Resolver | `id.invig.no` – GS1 Digital Link redirect |
 | Data (planned) | Invig Bifrost API via fetch on page load |
 | Tag encoding | QR code or NFC NDEF URI record |
 
@@ -112,7 +142,8 @@ After building, copy the contents of `dist/public/` to the `gh-pages` branch and
 
 - [x] Static branded landing page with CTA buttons
 - [x] GitHub Pages deployment
-- [ ] Dynamic asset lookup by tag ID (`?id=` query parameter)
+- [x] GS1 Digital Link resolver at `id.invig.no` (redirect `8004/<GIAI>` → landing page)
+- [ ] Dynamic asset lookup by GIAI (`?giai=` query parameter → Bifrost API)
 - [ ] Customer-specific branding (logo, accent colour) from API response
 - [ ] Multi-object type rendering (keys, tools, vehicles, equipment, devices)
 - [ ] "Report found" flow for lost asset recovery
