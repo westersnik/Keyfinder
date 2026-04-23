@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+<html lang="no">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1" />
+  <title>Invig Locate IT</title>
+  <meta name="description" content="Dette objektet er registrert og sporet i Invig Locate IT." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600;9..40,700&display=swap" rel="stylesheet" />
+  <style>
+    /* =====================================================
+       Invig Locate IT – V2 Dynamic Tag Landing Page
+       Design: Nordic Clarity – cream bg, olive-green primary
+       Reads: ?giai= or ?id= from URL
+       Invig GCP prefix: 7073539
+       ===================================================== */
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:        #F5F2EC;
+      --card:      #FFFFFF;
+      --primary:   #2D4A35;
+      --primary-l: #3A5E44;
+      --accent:    #C8873A;
+      --text:      #1E1E1A;
+      --muted:     #6B6860;
+      --border:    #E0DBD1;
+      --radius:    14px;
+      --shadow:    0 2px 12px rgba(0,0,0,0.07);
+    }
+
+    body {
+      font-family: 'DM Sans', system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100dvh;
+      display: flex;
+      flex-direction: column;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ── Header ── */
+    header {
+      position: sticky; top: 0; z-index: 50;
+      background: rgba(255,255,255,0.88);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid var(--border);
+      padding: 12px 20px;
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    header img { height: 28px; width: auto; object-fit: contain; }
+    header .badge {
+      font-size: 10px; font-weight: 600; letter-spacing: 0.08em;
+      text-transform: uppercase; color: var(--muted);
+    }
+
+    /* ── Hero image ── */
+    .hero {
+      width: 100%; height: 200px; overflow: hidden; position: relative;
+      background: #D8D4CC;
+    }
+    .hero img {
+      width: 100%; height: 100%; object-fit: cover; object-position: center 55%;
+      transition: opacity 0.4s;
+    }
+    .hero::after {
+      content: ''; position: absolute; inset: 0;
+      background: linear-gradient(to top, rgba(245,242,236,0.55) 0%, transparent 60%);
+    }
+
+    /* ── Main ── */
+    main {
+      flex: 1;
+      max-width: 480px; width: 100%;
+      margin: 0 auto;
+      padding: 20px 20px 32px;
+      display: flex; flex-direction: column; gap: 18px;
+    }
+
+    /* Scan badge */
+    .scan-badge {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: rgba(45,74,53,0.10); border: 1px solid rgba(45,74,53,0.20);
+      border-radius: 999px; padding: 6px 14px; width: fit-content;
+    }
+    .scan-dot {
+      width: 8px; height: 8px; border-radius: 50%; background: var(--primary);
+      animation: pulse 2s ease-in-out infinite;
+    }
+    .scan-badge span { font-size: 11px; font-weight: 600; color: var(--primary); letter-spacing: 0.06em; text-transform: uppercase; }
+
+    @keyframes pulse {
+      0%   { box-shadow: 0 0 0 0 rgba(45,74,53,0.45); }
+      70%  { box-shadow: 0 0 0 8px rgba(45,74,53,0); }
+      100% { box-shadow: 0 0 0 0 rgba(45,74,53,0); }
+    }
+
+    /* Title block */
+    .title-block h1 { font-size: 28px; font-weight: 700; line-height: 1.2; }
+    .title-block h1 em { font-style: normal; color: var(--primary); }
+    .title-block p { margin-top: 8px; font-size: 14px; color: var(--muted); line-height: 1.55; }
+    .title-block p strong { color: var(--text); font-weight: 600; }
+
+    /* ── Asset info card ── */
+    .asset-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+    .asset-card-header {
+      background: var(--primary);
+      padding: 12px 16px;
+      display: flex; align-items: center; gap: 10px;
+    }
+    .asset-card-header .type-icon {
+      width: 36px; height: 36px; border-radius: 8px;
+      background: rgba(255,255,255,0.15);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 18px;
+    }
+    .asset-card-header .type-label {
+      font-size: 11px; font-weight: 600; color: rgba(255,255,255,0.7);
+      text-transform: uppercase; letter-spacing: 0.07em;
+    }
+    .asset-card-header .asset-name {
+      font-size: 16px; font-weight: 700; color: #fff; margin-top: 1px;
+    }
+    .asset-fields { padding: 0; }
+    .field-row {
+      display: flex; align-items: flex-start;
+      padding: 11px 16px;
+      border-bottom: 1px solid var(--border);
+      gap: 12px;
+    }
+    .field-row:last-child { border-bottom: none; }
+    .field-icon { font-size: 15px; margin-top: 1px; flex-shrink: 0; width: 20px; text-align: center; }
+    .field-body { flex: 1; min-width: 0; }
+    .field-label { font-size: 10px; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: 0.07em; }
+    .field-value { font-size: 14px; font-weight: 500; color: var(--text); margin-top: 1px; word-break: break-word; }
+    .field-value.mono { font-family: 'Courier New', monospace; font-size: 12px; color: var(--muted); }
+
+    .status-pill {
+      display: inline-flex; align-items: center; gap: 5px;
+      padding: 3px 10px; border-radius: 999px; font-size: 12px; font-weight: 600;
+    }
+    .status-active   { background: #E6F4EA; color: #1E7A34; }
+    .status-checkout { background: #FFF3E0; color: #C8873A; }
+    .status-missing  { background: #FDECEA; color: #C0392B; }
+    .status-maint    { background: #EEF2FF; color: #3B5BDB; }
+
+    /* ── Feature cards ── */
+    .feature-cards { display: flex; flex-direction: column; gap: 10px; }
+    .feature-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-left: 3px solid var(--primary);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 14px 16px;
+      display: flex; align-items: flex-start; gap: 14px;
+    }
+    .feature-card .fi { font-size: 20px; flex-shrink: 0; margin-top: 1px; }
+    .feature-card h3 { font-size: 13px; font-weight: 600; }
+    .feature-card p  { font-size: 12px; color: var(--muted); margin-top: 3px; line-height: 1.5; }
+
+    /* ── CTA buttons ── */
+    .cta-group { display: flex; flex-direction: column; gap: 10px; }
+    .btn {
+      display: flex; align-items: center; justify-content: center; gap: 8px;
+      width: 100%; padding: 15px 20px;
+      border-radius: var(--radius); font-size: 15px; font-weight: 600;
+      text-decoration: none; border: none; cursor: pointer;
+      transition: transform 0.15s, opacity 0.15s;
+    }
+    .btn:active { transform: scale(0.97); opacity: 0.9; }
+    .btn-primary {
+      background: var(--primary); color: #fff;
+      box-shadow: 0 4px 16px rgba(45,74,53,0.28);
+    }
+    .btn-outline {
+      background: transparent; color: var(--primary);
+      border: 2px solid var(--primary);
+    }
+    .btn-muted {
+      background: #EDEAE3; color: #4A4840;
+      font-size: 14px; font-weight: 500;
+    }
+    .btn .arrow { margin-left: auto; opacity: 0.6; font-size: 14px; }
+    .btn .sub   { margin-left: auto; font-size: 11px; font-weight: 400; opacity: 0.6; }
+
+    /* ── GIAI info box ── */
+    .giai-box {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 14px 16px;
+    }
+    .giai-box .giai-label {
+      font-size: 10px; font-weight: 600; color: var(--primary);
+      text-transform: uppercase; letter-spacing: 0.08em;
+      display: flex; align-items: center; gap: 6px; margin-bottom: 8px;
+    }
+    .giai-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px; }
+    .giai-row .k { font-size: 11px; color: var(--muted); }
+    .giai-row .v { font-size: 12px; font-weight: 500; font-family: 'Courier New', monospace; }
+
+    /* ── Footer ── */
+    footer {
+      background: #1E3028;
+      padding: 24px 20px;
+      text-align: center;
+    }
+    footer img { height: 26px; width: auto; margin: 0 auto 10px; display: block; filter: brightness(0) invert(1); opacity: 0.9; }
+    footer p { font-size: 11px; color: rgba(255,255,255,0.5); line-height: 1.7; }
+    footer a { color: rgba(255,255,255,0.6); text-decoration: underline; text-underline-offset: 2px; }
+
+    /* ── Unknown state ── */
+    .unknown-banner {
+      background: #FFF8F0; border: 1px solid #F0D9B5;
+      border-radius: var(--radius); padding: 16px;
+      font-size: 13px; color: #7A5C2E; line-height: 1.5;
+      display: flex; gap: 10px; align-items: flex-start;
+    }
+
+    /* ── Animations ── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(14px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .fade-1 { animation: fadeUp 0.35s ease-out both; }
+    .fade-2 { animation: fadeUp 0.35s ease-out 0.08s both; }
+    .fade-3 { animation: fadeUp 0.35s ease-out 0.16s both; }
+    .fade-4 { animation: fadeUp 0.35s ease-out 0.24s both; }
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <header>
+    <img src="img/invig-logo.png" alt="Invig" onerror="this.style.display='none';document.getElementById('logo-text').style.display='block'" />
+    <span id="logo-text" style="display:none;font-weight:700;font-size:18px;color:#2D4A35;letter-spacing:0.02em;">INVIG</span>
+    <span class="badge">Locate IT</span>
+  </header>
+
+  <!-- Hero image (swapped by JS based on asset type) -->
+  <div class="hero">
+    <img id="hero-img" src="img/asset-key.jpg" alt="Asset" />
+  </div>
+
+  <main>
+
+    <!-- Scan badge -->
+    <div class="scan-badge fade-1">
+      <span class="scan-dot"></span>
+      <span>Tag skannet</span>
+    </div>
+
+    <!-- Title -->
+    <div class="title-block fade-1">
+      <h1 id="page-title">Dette objektet er<br><em>registrert og sporet</em></h1>
+      <p id="page-desc">En del av <strong>Invig Locate IT</strong> – sanntidssporing av eiendeler for verksteder, forhandlere og industri.</p>
+    </div>
+
+    <!-- Asset info card (shown when GIAI is known) -->
+    <div class="asset-card fade-2" id="asset-card">
+      <div class="asset-card-header">
+        <div class="type-icon" id="type-icon">🔑</div>
+        <div>
+          <div class="type-label" id="type-label">Nøkkel</div>
+          <div class="asset-name" id="asset-name">Laster…</div>
+        </div>
+      </div>
+      <div class="asset-fields">
+        <div class="field-row">
+          <div class="field-icon">🏢</div>
+          <div class="field-body">
+            <div class="field-label">Kunde</div>
+            <div class="field-value" id="f-customer">—</div>
+          </div>
+        </div>
+        <div class="field-row">
+          <div class="field-icon">📍</div>
+          <div class="field-body">
+            <div class="field-label">Siste kjente lokasjon</div>
+            <div class="field-value" id="f-location">—</div>
+          </div>
+        </div>
+        <div class="field-row">
+          <div class="field-icon">👤</div>
+          <div class="field-body">
+            <div class="field-label">Ansvarlig</div>
+            <div class="field-value" id="f-assigned">—</div>
+          </div>
+        </div>
+        <div class="field-row">
+          <div class="field-icon">🔄</div>
+          <div class="field-body">
+            <div class="field-label">Status</div>
+            <div class="field-value" id="f-status">—</div>
+          </div>
+        </div>
+        <div class="field-row">
+          <div class="field-icon">🔗</div>
+          <div class="field-body">
+            <div class="field-label">System-referanse</div>
+            <div class="field-value" id="f-ref">—</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- GIAI identity box -->
+    <div class="giai-box fade-2" id="giai-box">
+      <div class="giai-label">
+        <span>📡</span> GS1 Digital Link · GIAI
+      </div>
+      <div class="giai-row">
+        <span class="k">Invig GCP-prefiks</span>
+        <span class="v" id="giai-prefix">7073539</span>
+      </div>
+      <div class="giai-row">
+        <span class="k">Asset-referanse</span>
+        <span class="v" id="giai-ref">—</span>
+      </div>
+      <div class="giai-row">
+        <span class="k">Full GIAI</span>
+        <span class="v" id="giai-full">—</span>
+      </div>
+      <div class="giai-row">
+        <span class="k">GS1 AI</span>
+        <span class="v">(8004) <span id="giai-ai">—</span></span>
+      </div>
+      <div class="giai-row">
+        <span class="k">Resolver</span>
+        <span class="v" id="giai-resolver">id.invig.no/8004/…</span>
+      </div>
+    </div>
+
+    <!-- Unknown GIAI banner (shown if no data) -->
+    <div class="unknown-banner fade-2" id="unknown-banner" style="display:none;">
+      <span style="font-size:20px;">⚠️</span>
+      <div>
+        <strong>Ukjent tag-ID.</strong> Denne GIAI-en er ikke registrert i Invig Bifrost. Kontakt support for å registrere taggen.
+      </div>
+    </div>
+
+    <!-- Feature cards -->
+    <div class="feature-cards fade-3">
+      <div class="feature-card">
+        <div class="fi">📡</div>
+        <div>
+          <h3>Sanntidssporing</h3>
+          <p>Se nøyaktig hvor eiendeler befinner seg via BLE-gateways og Bifrost-plattformen.</p>
+        </div>
+      </div>
+      <div class="feature-card">
+        <div class="fi">⏱️</div>
+        <div>
+          <h3>Spar tid hver dag</h3>
+          <p>Typisk 45–60 minutter spart per dag per verksted. Slutt å lete.</p>
+        </div>
+      </div>
+      <div class="feature-card">
+        <div class="fi">🔗</div>
+        <div>
+          <h3>Integrerer med DMS og ERP</h3>
+          <p>Unik QR-kode per brikke kobler mot <strong>Automaster, Keyloop</strong> og <strong>SAP</strong>.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- CTA buttons -->
+    <div class="cta-group fade-4">
+      <a href="https://invig.no/nokkelsporingssystem" target="_blank" rel="noopener" class="btn btn-primary">
+        ℹ️ Få mer informasjon
+        <span class="arrow">›</span>
+      </a>
+      <a href="mailto:sales@invig.no" class="btn btn-outline">
+        ✉️ Kontakt salg
+        <span class="sub">sales@invig.no</span>
+      </a>
+      <a id="support-btn" href="mailto:support@invig.no" class="btn btn-muted">
+        🛟 Support
+        <span class="sub">support@invig.no</span>
+      </a>
+    </div>
+
+  </main>
+
+  <!-- Footer -->
+  <footer>
+    <img src="img/invig-logo.png" alt="Invig" onerror="this.style.display='none'" />
+    <p>
+      Invig AS · 913 630 726 mva<br />
+      Koppholen 19, 4313 Sandnes<br />
+      <a href="https://invig.no" target="_blank">invig.no</a> ·
+      <a href="mailto:post@invig.no">post@invig.no</a>
+    </p>
+  </footer>
+
+  <script>
+    /* =====================================================
+       Invig Locate IT V2 – Dynamic asset rendering
+       URL format: ?giai=<GIAI>  or  ?id=<GIAI>
+       Invig GCP prefix: 7073539
+       ===================================================== */
+
+    const INVIG_GCP = '7073539';
+
+    // Asset type definitions
+    const ASSET_TYPES = {
+      key:       { icon: '🔑', label: 'Nøkkel',           img: 'img/asset-key.jpg',       title: 'Denne nøkkelen er', em: 'registrert og sporet' },
+      tool:      { icon: '🔧', label: 'Verktøy',          img: 'img/asset-tool.jpg',      title: 'Dette verktøyet er', em: 'registrert og sporet' },
+      vehicle:   { icon: '🚗', label: 'Kjøretøy',         img: 'img/asset-vehicle.jpg',   title: 'Dette kjøretøyet er', em: 'registrert og sporet' },
+      equipment: { icon: '🏗️', label: 'Utstyr',           img: 'img/asset-equipment.jpg', title: 'Dette utstyret er', em: 'registrert og sporet' },
+      medical:   { icon: '🏥', label: 'Medisinsk utstyr', img: 'img/asset-medical.jpg',   title: 'Dette utstyret er', em: 'registrert og sporet' },
+      pallet:    { icon: '📦', label: 'Pall/Forsendelse', img: 'img/asset-equipment.jpg', title: 'Denne forsendelsen er', em: 'registrert og sporet' },
+      other:     { icon: '📌', label: 'Eiendel',          img: 'img/asset-key.jpg',       title: 'Denne eiendelen er', em: 'registrert og sporet' },
+    };
+
+    // Status badge renderer
+    function statusBadge(status) {
+      const map = {
+        active:   ['status-active',   '🟢', 'Aktiv'],
+        checkout: ['status-checkout', '🟡', 'Utlevert'],
+        missing:  ['status-missing',  '🔴', 'Savnet'],
+        maint:    ['status-maint',    '🔵', 'Vedlikehold'],
+      };
+      const [cls, dot, label] = map[status] || ['status-active', '⚪', status || 'Ukjent'];
+      return `<span class="status-pill ${cls}">${dot} ${label}</span>`;
+    }
+
+    // Mock data lookup – replace with real Bifrost API call
+    function lookupAsset(giai) {
+      const MOCK_DB = {
+        '70735391257': {
+          type: 'key',
+          name: 'BMW 5-serie – AB 12345',
+          customer: 'Sandnes Bilsenter AS',
+          location: 'Verkstedhall B – Seksjon 3',
+          assigned: 'Knut Olsen',
+          status: 'active',
+          ref: 'Automaster #WO-20241105',
+          contact: 'mailto:support@sandesbilsenter.no',
+        },
+        '70735391258': {
+          type: 'tool',
+          name: 'Momentnøkkel 1/2" – Snap-on',
+          customer: 'Stavanger Mekaniske AS',
+          location: 'Lager – Hylle 7C',
+          assigned: 'Verkstedleder',
+          status: 'checkout',
+          ref: 'SAP Asset #TL-00442',
+          contact: null,
+        },
+        '70735391259': {
+          type: 'vehicle',
+          name: 'Audi A4 – EK 44321 (Lånebil)',
+          customer: 'Invig Demo Forhandler',
+          location: 'Uteparkering – Rad C',
+          assigned: 'Resepsjon',
+          status: 'active',
+          ref: 'Keyloop #LV-2024-0088',
+          contact: null,
+        },
+        '70735391260': {
+          type: 'equipment',
+          name: 'Gaffeltruck – Toyota 8FBN25',
+          customer: 'Norsk Logistikk AS',
+          location: 'Lager 2 – Port 4',
+          assigned: 'Driftsavdelingen',
+          status: 'maint',
+          ref: 'SAP PM #EQ-00109',
+          contact: null,
+        },
+        '70735391261': {
+          type: 'medical',
+          name: 'Ultralyd – GE Logiq E10',
+          customer: 'Stavanger Universitetssjukehus',
+          location: 'Avdeling 4B – Rom 412',
+          assigned: 'Biomedisinsk teknikk',
+          status: 'active',
+          ref: 'Internt ID: MED-2024-0033',
+          contact: 'mailto:bmt@sus.no',
+        },
+      };
+      return MOCK_DB[giai] || null;
+    }
+
+    // Parse GIAI from URL
+    function getGIAI() {
+      const p = new URLSearchParams(window.location.search);
+      return p.get('giai') || p.get('id') || null;
+    }
+
+    // Extract asset reference (digits after GCP prefix)
+    function assetRef(giai) {
+      if (giai && giai.startsWith(INVIG_GCP)) return giai.slice(INVIG_GCP.length);
+      return giai || '—';
+    }
+
+    // Render page
+    function render() {
+      const giai = getGIAI();
+
+      // Populate GIAI box
+      if (giai) {
+        document.getElementById('giai-full').textContent     = giai;
+        document.getElementById('giai-ai').textContent      = giai;
+        document.getElementById('giai-ref').textContent     = assetRef(giai);
+        document.getElementById('giai-resolver').textContent = `id.invig.no/8004/${giai}`;
+        document.getElementById('giai-prefix').textContent  = INVIG_GCP;
+      } else {
+        document.getElementById('giai-box').style.display = 'none';
+      }
+
+      // Look up asset data
+      const asset = giai ? lookupAsset(giai) : null;
+
+      if (!giai || !asset) {
+        // No GIAI or unknown – show generic page + warning
+        document.getElementById('asset-card').style.display = 'none';
+        if (giai) document.getElementById('unknown-banner').style.display = 'flex';
+        return;
+      }
+
+      // Apply asset type
+      const type = ASSET_TYPES[asset.type] || ASSET_TYPES.other;
+      document.getElementById('hero-img').src        = type.img;
+      document.getElementById('hero-img').alt        = type.label;
+      document.getElementById('type-icon').textContent = type.icon;
+      document.getElementById('type-label').textContent = type.label;
+      document.getElementById('asset-name').textContent = asset.name;
+
+      // Title
+      document.getElementById('page-title').innerHTML =
+        `${type.title}<br><em>${type.em}</em>`;
+
+      // Fields
+      document.getElementById('f-customer').textContent  = asset.customer  || '—';
+      document.getElementById('f-location').textContent  = asset.location  || '—';
+      document.getElementById('f-assigned').textContent  = asset.assigned  || '—';
+      document.getElementById('f-status').innerHTML      = statusBadge(asset.status);
+      document.getElementById('f-ref').textContent       = asset.ref       || '—';
+
+      // Support button: use customer contact if available
+      if (asset.contact) {
+        document.getElementById('support-btn').href = asset.contact;
+      }
+    }
+
+    render();
+  </script>
+</body>
+</html>
